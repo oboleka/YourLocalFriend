@@ -4,16 +4,16 @@ package ru.alexander.yourlocalfriend.packageDTO;
  * Created by ekaterina on 12/09/2017.
  */
 
-public class YourLocalFriend {
+public class YourLocalFriendDTO {
     private String yourLocalFriendName;
     private String yourLocalFriendAge;
     private String yourLocalFriendHobbies;
 
-    public YourLocalFriend(String yourLocalFriendName) {
+    public YourLocalFriendDTO(String yourLocalFriendName) {
         this.yourLocalFriendName = yourLocalFriendName;
     }
 
-    public YourLocalFriend(String yourLocalFriendName, String yourLocalFriendAge, String yourLocalFriendHobbies) {
+    public YourLocalFriendDTO(String yourLocalFriendName, String yourLocalFriendAge, String yourLocalFriendHobbies) {
         this.yourLocalFriendName = yourLocalFriendName;
         this.yourLocalFriendAge = yourLocalFriendAge;
         this.yourLocalFriendHobbies = yourLocalFriendHobbies;
