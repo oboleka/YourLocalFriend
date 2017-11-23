@@ -20,7 +20,7 @@ import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
 public class Tab2Chat extends Fragment {
     private static final int LAYOUT=R.layout.tab2_chat;
     private static final int TITLE=R.string.tab_item_chats;
-
+    public List<YourLocalFriendDTO> data=new ArrayList<YourLocalFriendDTO>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,12 +39,19 @@ public class Tab2Chat extends Fragment {
     }
 
     private List<YourLocalFriendDTO> createMockAddressChatList() {
-        List<YourLocalFriendDTO> data=new ArrayList<YourLocalFriendDTO>();
+
+        data.add(new YourLocalFriendDTO("NO ADDRESS CHAT", "10", "playing"));
         data.add(new YourLocalFriendDTO("Jean Louise", "10", "playing"));
         data.add(new YourLocalFriendDTO("Jem", "11", "playing"));
         data.add(new YourLocalFriendDTO("Atticus Finch", "50", "law"));
         data.add(new YourLocalFriendDTO("Calpornia", "60", "Cooking"));
         data.add(new YourLocalFriendDTO("Boo Radly", "50", "Scary"));
+
+        return data;
+    }
+    public List<YourLocalFriendDTO> addMockAddressChatList(YourLocalFriendDTO addedFriend) {
+
+        data.add(addedFriend);
 
         return data;
     }

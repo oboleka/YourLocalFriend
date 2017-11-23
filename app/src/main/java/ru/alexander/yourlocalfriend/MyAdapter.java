@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
+
 import static ru.alexander.yourlocalfriend.R.color.toastBackground;
 import static ru.alexander.yourlocalfriend.R.color.toastTexColor;
 import static ru.alexander.yourlocalfriend.R.id.localFriendsListView;
@@ -54,6 +56,8 @@ public class MyAdapter extends ArrayAdapter<String> {
                  vieew.setBackgroundResource(R.drawable.toast);
                 toast.setView(vieew);
                 toast.show();
+
+                //addMockAddressChatList(YourLocalFriendDTO addedFriend);
             }
         });
 

@@ -94,6 +94,7 @@ public class Tab3Guide extends Fragment {
                 toast.show();
 
                 generateListView();
+
                 localFriendsListView.setAdapter(new MyAdapter(v.getContext(), R.layout.list_item, your_array_list));
                 //localFriendsListView.setVisibility(View.VISIBLE);
                 localFriendsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
