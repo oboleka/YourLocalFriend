@@ -17,7 +17,7 @@ import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
 
 import static ru.alexander.yourlocalfriend.R.color.toastBackground;
 import static ru.alexander.yourlocalfriend.R.color.toastTexColor;
-import static ru.alexander.yourlocalfriend.R.id.localFriendsListView;
+
 
 public class MyAdapter extends ArrayAdapter<String> {
     private int layout;

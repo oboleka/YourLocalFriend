@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageView
+        android:id="@+id/list_view_image"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_width="65dp"
+        android:layout_height="65dp" />
+    <TextView
+        android:id="@+id/list_view_text_view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/your_local_friend_name"
+        android:layout_toRightOf="@+id/list_view_image"></TextView>
+    <TextView
+        android:id="@+id/list_view_text_view2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/your_local_friend_age"
+        android:layout_below="@+id/list_view_text_view1"
+        android:layout_toRightOf="@+id/list_view_image"></TextView>
+    <TextView
+        android:id="@+id/list_view_text_view3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/your_local_friend_interests"
+        android:layout_below="@+id/list_view_text_view2"
+        android:layout_toRightOf="@+id/list_view_image"></TextView>
+
+    <Button
+        android:id="@+id/btn_add_to_chat_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_add_to_chat"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/list_view_text_view3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

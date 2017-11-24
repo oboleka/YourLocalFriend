@@ -10,53 +10,68 @@
     android:layout_marginRight="12dp">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/adress_chat_cardView"
+        android:id="@+id/your_local_friend_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card:cardElevation="2dp"
         card:cardUseCompatPadding="true">
 
         <RelativeLayout
-            android:id="@+id/card_view_linear_layout"
+            android:id="@+id/your_local_friend_card_view_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/local_friend_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 card:srcCompat="@drawable/hello" />
 
             <TextView
-                android:id="@+id/chat_friend_name_in_card_view"
+                android:id="@+id/local_friend__name_in_card_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/local_friend_imageView"
+                android:layout_toRightOf="@+id/local_friend_imageView"
                 android:paddingLeft="5dp"
-                android:layout_toEndOf="@+id/imageView"
-                android:layout_toRightOf="@+id/imageView"
                 android:text="TextView" />
 
             <TextView
-                android:id="@+id/chat_last_phrase"
+                android:id="@+id/local_friends_hobby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/local_friend_imageView"
+                android:layout_toRightOf="@+id/local_friend_imageView"
                 android:paddingLeft="5dp"
-                android:layout_toEndOf="@+id/imageView"
-                android:layout_toRightOf="@+id/imageView"
-                android:text="TextView" />
+                android:text="TextView"
+                android:layout_below="@+id/local_friend__name_in_card_view" />
 
             <TextView
-                android:id="@+id/chat_date"
+                android:id="@+id/local_friend_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/local_friend_imageView"
+                android:layout_toRightOf="@+id/local_friend_imageView"
+                android:text="TextView"
+                android:paddingLeft="5dp"
+                android:layout_below="@+id/local_friends_hobby" />
+
+            <Button
+                android:id="@+id/btn_add_to_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add to chat!"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_alignBottom="@+id/local_friend_age"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 android:paddingRight="5dp"
-                android:text="TextView" />
+                android:layout_alignParentTop="true" />
 
 
         </RelativeLayout>
