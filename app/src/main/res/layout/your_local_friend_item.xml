@@ -22,10 +22,16 @@
             android:layout_height="wrap_content">
 
 
+
+
             <ImageView
                 android:id="@+id/local_friend_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:scaleType="fitXY"
                 card:srcCompat="@drawable/hello" />
 
             <TextView
@@ -36,41 +42,76 @@
                 android:layout_toEndOf="@+id/local_friend_imageView"
                 android:layout_toRightOf="@+id/local_friend_imageView"
                 android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="1dp"
+                android:paddingTop="5dp"
                 android:text="TextView" />
 
+
+
+            <TextView
+                android:id="@+id/label_hobby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="1dp"
+                android:paddingTop="1dp"
+                android:text="@string/label_hobby_eng"
+                android:layout_toRightOf="@+id/local_friend_imageView"
+                android:layout_toEndOf="@+id/local_friend_imageView"
+                android:layout_below="@+id/local_friend__name_in_card_view" />
             <TextView
                 android:id="@+id/local_friends_hobby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="1dp"
+                android:paddingTop="1dp"
+                android:text="TextView"
+                android:layout_below="@+id/local_friend__name_in_card_view"
+                android:layout_toRightOf="@+id/local_friend__name_in_card_view"
+                android:layout_toEndOf="@+id/local_friend__name_in_card_view" />
+            <TextView
+                android:id="@+id/label_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="1dp"
                 android:layout_toEndOf="@+id/local_friend_imageView"
                 android:layout_toRightOf="@+id/local_friend_imageView"
-                android:paddingLeft="5dp"
-                android:text="TextView"
-                android:layout_below="@+id/local_friend__name_in_card_view" />
-
+                android:text="@string/label_hobby_age"
+                android:layout_below="@+id/label_hobby"
+                android:layout_alignBottom="@+id/local_friend_age" />
             <TextView
                 android:id="@+id/local_friend_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/local_friend_imageView"
-                android:layout_toRightOf="@+id/local_friend_imageView"
                 android:text="TextView"
                 android:paddingLeft="5dp"
-                android:layout_below="@+id/local_friends_hobby" />
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="1dp"
+                android:layout_alignLeft="@+id/local_friends_hobby"
+                android:layout_alignStart="@+id/local_friends_hobby"
+                android:layout_below="@+id/local_friends_hobby"
+                 />
 
             <Button
                 android:id="@+id/btn_add_to_chat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:text="Add to chat!"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginRight="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_alignBottom="@+id/local_friend_age"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:paddingRight="5dp"
                 android:layout_alignParentTop="true" />
 
 
