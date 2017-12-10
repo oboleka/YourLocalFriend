@@ -8,16 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
 
 public class AdressChatListAdapter extends RecyclerView.Adapter<AdressChatListAdapter.AdressChatHolder> {
 
-    private List<YourLocalFriendDTO> data;
+    public List<YourLocalFriendDTO> data1;
 
     public AdressChatListAdapter(List<YourLocalFriendDTO> data){
-        this.data=data;
+        data1=new ArrayList<YourLocalFriendDTO>();
+        this.data1=data;
     }
 
     @Override
@@ -30,12 +32,17 @@ public class AdressChatListAdapter extends RecyclerView.Adapter<AdressChatListAd
     // set values to chat item
     @Override
     public void onBindViewHolder(AdressChatHolder holder, int position) {
-        holder.name.setText(data.get(position).getYourLocalFriendName());
+        holder.name.setText(data1.get(position).getYourLocalFriendName());
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return data1.size();
+
+    }
+
+    public void setData(List<YourLocalFriendDTO> data) {
+        this.data1 = data;
     }
 
     public static class AdressChatHolder extends RecyclerView.ViewHolder {

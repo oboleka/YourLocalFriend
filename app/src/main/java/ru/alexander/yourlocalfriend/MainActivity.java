@@ -26,40 +26,64 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
+
+import static java.security.AccessController.getContext;
+
+public class MainActivity extends AppCompatActivity  implements Tab3Guide.OnFriendSelectedListener{
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
+    List<YourLocalFriendDTO> chatlist;
 
+    public void initchatlist(){
+        chatlist=new ArrayList<YourLocalFriendDTO>();
+        chatlist.add(new YourLocalFriendDTO("NO ADDRESS CHAT", "date", "last"));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
+        this.initchatlist();
         mViewPager = (ViewPager) findViewById(R.id.container);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), chatlist);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mSectionsPagerAdapter.setData(chatlist);
+/*
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Fragment fragment=((SectionsPagerAdapter) mViewPager.getAdapter()).getFragment(position);
+                if ((position==1)&&(fragment!=null))
+                {
+                    //fragment.onResume();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+*/
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -124,4 +148,43 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFriendSelected(YourLocalFriendDTO FriendObject) {
+       if (isNotAddedToChat(FriendObject)){
+           chatlist.add(FriendObject);
+       }
+       mSectionsPagerAdapter.setData(chatlist);
+       mSectionsPagerAdapter.refreshData(chatlist);
+    }
+
+    public boolean isNotAddedToChat(YourLocalFriendDTO FriendObject) {
+        for (int i = 0; i < chatlist.size(); i++) {
+            if (chatlist.get(i) == FriendObject) {
+                Toast toast=Toast.makeText(this, "You already have him in chats: "+FriendObject.getYourLocalFriendName(), Toast.LENGTH_SHORT);
+                TextView text;
+                View vieew = toast.getView();
+                text = (TextView) vieew.findViewById(android.R.id.message);
+                text.setTextColor(getResources().getColor(R.color.toastTexColor));
+                //text.setShadowLayer(0,0,0,0);
+                text.setBackgroundColor(getResources().getColor(R.color.toastBackground));
+                vieew.setBackgroundResource(R.drawable.toast);
+                toast.setView(vieew);
+                toast.show();
+
+                return false;
+            }
+        }
+
+        Toast toast=Toast.makeText(this, "Your friend is added to chats: "+FriendObject.getYourLocalFriendName(), Toast.LENGTH_SHORT);
+        TextView text;
+        View vieew = toast.getView();
+        text = (TextView) vieew.findViewById(android.R.id.message);
+        text.setTextColor(getResources().getColor(R.color.toastTexColor));
+        //text.setShadowLayer(0,0,0,0);
+        text.setBackgroundColor(getResources().getColor(R.color.toastBackground));
+        vieew.setBackgroundResource(R.drawable.toast);
+        toast.setView(vieew);
+        toast.show();
+        return true;
+    }
 }

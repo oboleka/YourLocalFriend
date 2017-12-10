@@ -1,9 +1,11 @@
 package ru.alexander.yourlocalfriend;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,13 +26,41 @@ import java.util.List;
 
 import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
 
-public class Tab3Guide extends Fragment {
+public class Tab3Guide extends  ParentFragment {
     private static final int LAYOUT=R.layout.tab3_guide;
-    private static final int TITLE=R.string.tab_item_find_friend;
-    public List<YourLocalFriendDTO> LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
+    private String title;
+    private Context context;
+    OnFriendSelectedListener mCallback;
 
-    //ArrayList<String> your_array_list=new ArrayList<String>();
-    //ListView localFriendsListView;
+    // Container Activity must implement this interface
+    public interface OnFriendSelectedListener {
+        public void onFriendSelected(YourLocalFriendDTO FriendObject);
+    }
+
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity = getActivity();
+
+
+            // This makes sure that the container activity has implemented
+            // the callback interface. If not, it throws an exception
+            try {
+                mCallback = (OnFriendSelectedListener) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnHeadlineSelectedListener");
+            }
+
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +75,6 @@ public class Tab3Guide extends Fragment {
 
         final RecyclerView LocalFriendRV=(RecyclerView)rootView.findViewById(R.id.local_friend_RecyclerView);
         LocalFriendRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        //create list : List<YourLocalFriendDTO> LocalFriendsList;
 
 
         Button btnSrchEnteredParameters = (Button) rootView.findViewById(R.id.btnSrchEnteredParameters);
@@ -67,7 +96,7 @@ public class Tab3Guide extends Fragment {
                 toast.setView(vieew);
                 toast.show();
 
-                LocalFriendRV.setAdapter(new LocalFriendsListAdapter(generateListView()));
+                LocalFriendRV.setAdapter(new LocalFriendsListAdapter(generateListView(),getActivity(),Tab3Guide.this));
 
 
 
@@ -90,7 +119,7 @@ public class Tab3Guide extends Fragment {
                 toast.setView(vieew);
                 toast.show();
 
-                LocalFriendRV.setAdapter(new LocalFriendsListAdapter(generateListView()));
+                LocalFriendRV.setAdapter(new LocalFriendsListAdapter(generateListView(),getActivity(),Tab3Guide.this));
 
 
             }
@@ -106,13 +135,39 @@ public class Tab3Guide extends Fragment {
             //sends to server
             //gets the results as ArrayList<YourLocalFriend> guides object
             //Show the ListView
-        LocalFriendsList.add(new YourLocalFriendDTO("NO ADDRESS CHAT", "10", "playing"));
-        LocalFriendsList.add(new YourLocalFriendDTO("Jean Louise", "10", "playing"));
-        LocalFriendsList.add(new YourLocalFriendDTO("Jem", "11", "playing"));
-        LocalFriendsList.add(new YourLocalFriendDTO("Atticus Finch", "50", "law"));
-        LocalFriendsList.add(new YourLocalFriendDTO("Calpornia", "60", "Cooking"));
+        LocalFriendsList.add(new YourLocalFriendDTO("Harper Lee", "85", "writing, living, imagination"));
+        LocalFriendsList.add(new YourLocalFriendDTO("Jean Louise", "10", "playing, school, lessons, scary stories"));
+        LocalFriendsList.add(new YourLocalFriendDTO("Jem", "11", "playing, playing , playing, playing, playing, playing"));
+        LocalFriendsList.add(new YourLocalFriendDTO("Atticus Finch", "50", "law, law, law, law, law, law, law, law, law"));
+        LocalFriendsList.add(new YourLocalFriendDTO("Calpornia", "60", "Cooking, playing, Cooking,Cooking,Cooking,Cooking"));
         LocalFriendsList.add(new YourLocalFriendDTO("Boo Radly", "50", "Scary"));
 
         return LocalFriendsList;
         }
+
+        // Send the event to the host activity
+
+        public  void passToAnotherActivity(YourLocalFriendDTO FriendObject){
+            mCallback.onFriendSelected(FriendObject);
+
+
+        }
+;
+
+
+
+    public static Tab3Guide getInstanceTab3(Context context){
+        Bundle args=new Bundle();
+        Tab3Guide tab3=new Tab3Guide();
+        tab3.setArguments(args);
+        tab3.setContext(context);
+        tab3.setTitle (context.getString(R.string.tab_item_find_friend));
+
+        return tab3;
+        //updateddata=new ArrayList<YourLocalFriendDTO>();
+        //updateddata.add(new YourLocalFriendDTO("INIT", "15", "plat" ));
     }
+}
+
+
+

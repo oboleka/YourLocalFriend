@@ -5,37 +5,44 @@ import android.support.v4.app.*;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.alexander.yourlocalfriend.R.*;
+import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
 
-/**
- *
- * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
- * one of the sections/tabs/pages.
- */
+
 public class SectionsPagerAdapter extends FragmentPagerAdapter{
 
-    private Map<Integer, String> tabs;
+    private Map<Integer, ParentFragment> tabs;
     FragmentManager fm;
     private Context context;
+    Tab2Chat tab2Chat;
+    private List<YourLocalFriendDTO> data;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public List<YourLocalFriendDTO> setData(List<YourLocalFriendDTO> data) {
+        this.data = data;
+        return data;
+    }
+
+    public void refreshData(List<YourLocalFriendDTO> chatlist) {
+        tab2Chat.refreshData(data);
+    }
+
+
+    public SectionsPagerAdapter(Context context, FragmentManager fm, List<YourLocalFriendDTO> list) {
         super(fm);
-        /*
-        tabs=new String[]{
-                "YOUR DETAILS",
-                "CHATS",
-                "FIND LOCAL FRIEND"
-        };
-        */
         this.context=context;
-        tabs=new HashMap<>();
-        tabs.put(0, context.getString(string.tab_item_your_details));
-        tabs.put(1, context.getString(string.tab_item_chats));
-        tabs.put(2, context.getString(string.tab_item_find_friend));
+        //this.data=setData(list);
+        this.data=list;
+        initMap(context);
+
+
     }
 
     @Override
@@ -45,20 +52,27 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
         // return PlaceholderFragment.newInstance(position + 1);
 
         //Returning the current tab
+        /*
         switch (position){
             case 0:
                 Tab1Info tab1=new Tab1Info();
+
                 return tab1;
             case 1:
-                Tab2Chat tab2=new Tab2Chat();
-                return tab2;
+                //Tab2Chat tab2=new Tab2Chat();
+                //tab2.setArguments(bundle);
+
+                return Tab2Chat.getInstanceTab2Chat();
             case 2:
-                Tab3Guide tab3=new Tab3Guide();
-                return tab3;
+                //Tab3Guide tab3=new Tab3Guide();
+
+                return Tab3Guide.getInstanceTab3();
             default:
                 return null;
 
         }
+        */
+        return tabs.get(position);
     }
 
     @Override
@@ -70,7 +84,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
     @Override
     public CharSequence getPageTitle(int position) {
 
-        /*
+/*
         switch (position) {
             case 0:
                 return "YOUR DETAILS";
@@ -80,15 +94,47 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
                 return "FIND LOCAL FRIEND";
         }
         return null;
-        */
-        return tabs.get(position);
+*/
+        return tabs.get(position).getTitle();
     }
 
 
     public void switchToFragment(Fragment newFrag) {
-        FragmentTransaction transaction = fm.beginTransaction();
+
+        FragmentTransaction transaction = this.fm.beginTransaction();
         transaction.replace(id.container, newFrag);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
+
+
+    /*    @Override
+    public Object instantiateItem(ViewGroup container, int position){
+              Object obj=super.instantiateItem(container, position);
+              if (obj instanceof Fragment){
+                  Fragment f= (Fragment) obj;
+                  Integer id=f.getId();
+                  mFragmentTags.put(position, id);
+              }
+              return  obj;
+      }
+
+    public Fragment getFragment(int position){
+        Integer tag=mFragmentTags.get(position);
+        if (tag==null){
+            return null;
+
+        }
+        return fm.findFragmentById(tag);
+    }
+*/
+        private void initMap(Context context) {
+            tabs = new HashMap<>();
+            tabs.put(0, Tab1Info.getInstanceTab1Info(context));
+            tab2Chat=Tab2Chat.getInstanceTab2Chat(context, data);
+            tabs.put(1, tab2Chat);
+            tabs.put(2, Tab3Guide.getInstanceTab3(context));
+        }
+
 
 }
