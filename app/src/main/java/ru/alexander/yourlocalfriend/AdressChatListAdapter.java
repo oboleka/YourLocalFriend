@@ -26,9 +26,10 @@ public class AdressChatListAdapter extends RecyclerView.Adapter<AdressChatListAd
     public AdressChatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adress_chat_item, parent, false) ;
-
         return new AdressChatHolder(view);
+
     }
+
     // set values to chat item
     @Override
     public void onBindViewHolder(AdressChatHolder holder, int position) {

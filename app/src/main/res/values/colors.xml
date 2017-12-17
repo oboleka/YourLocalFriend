@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ccffcc</color>
+    <color name="colorPrimaryDark">#CCFFCC</color>
+    <color name="colorAccent">#336633</color>
+    <color name="textColor">#336633</color>
+    <color name="selectedTextColor">#333333</color>
+    <color name="toastTexColor">#000000</color>
+    <color name="toastBackground">#CCCCCC</color>
+</resources>

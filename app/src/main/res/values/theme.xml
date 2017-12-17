@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="YourLocalFriendThemeButton" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/button</item>
+
+    </style>
+
+    <style name="Widget.AppTheme.ActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+        <!-- action bar background - without android prefix -->
+        <item name="android:background">#CCFFCC</item>
+        <!-- action bar elevation - without android prefix -->
+        <item name="elevation">4dp</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!-- title text color -->
+        <item name="android:textColorPrimary">#336633</item>
+        <!-- subtitle text color -->
+        <item name="android:textColorSecondary">#336633</item>
+        <!-- action menu item text color -->
+        <item name="actionMenuTextColor">#336633</item>
+        <!-- action menu item icon color -->
+        <item name="colorControlNormal">#336633</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.PopupMenu" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- popup menu background - NEVER "android:background" !!! in themes -->
+        <item name="android:colorBackground">#CCFFCC</item>
+
+        <!-- popup menu item text color -->
+        <item name="android:textColorPrimary">#336633</item>
+    </style>
+
+    <style name="MyTitleTextStyle"  parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <item name="android:textColor">#336633</item>
+    </style>
+</resources>

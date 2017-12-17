@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +24,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
     FragmentManager fm;
     private Context context;
     Tab2Chat tab2Chat;
-    private List<YourLocalFriendDTO> data;
+    private ArrayList<YourLocalFriendDTO> data;
 
-    public List<YourLocalFriendDTO> setData(List<YourLocalFriendDTO> data) {
+    public ArrayList<YourLocalFriendDTO> setData(ArrayList<YourLocalFriendDTO> data) {
         this.data = data;
         return data;
     }
@@ -35,7 +36,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
     }
 
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, List<YourLocalFriendDTO> list) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm, ArrayList<YourLocalFriendDTO> list) {
         super(fm);
         this.context=context;
         //this.data=setData(list);

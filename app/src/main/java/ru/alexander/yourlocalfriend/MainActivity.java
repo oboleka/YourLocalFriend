@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity  implements Tab3Guide.OnFrie
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    List<YourLocalFriendDTO> chatlist;
+    ArrayList<YourLocalFriendDTO> chatlist;
 
     public void initchatlist(){
         chatlist=new ArrayList<YourLocalFriendDTO>();

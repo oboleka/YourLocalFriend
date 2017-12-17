@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +19,12 @@ public class Tab2Chat extends ParentFragment {
     private static final int LAYOUT=R.layout.tab2_chat;
     private String title;
     private Context context;
-    List<YourLocalFriendDTO> updateddata;
+    ArrayList<YourLocalFriendDTO> updateddata;
     RecyclerView AddressRV;
     AdressChatListAdapter adapter;
 
 
-    public void setUpdateddata(List<YourLocalFriendDTO> data) {
+    public void setUpdateddata(ArrayList<YourLocalFriendDTO> data) {
         updateddata=new ArrayList<YourLocalFriendDTO>();
         this.updateddata = data;
     }
@@ -36,7 +37,7 @@ public class Tab2Chat extends ParentFragment {
         return this.updateddata;
     }
 
-    public static Tab2Chat getInstanceTab2Chat(Context context, List<YourLocalFriendDTO>  data ){
+    public static Tab2Chat getInstanceTab2Chat(Context context, ArrayList<YourLocalFriendDTO>  data ){
         Bundle args=new Bundle();
         Tab2Chat tab2=new Tab2Chat();
         tab2.setArguments(args);
@@ -48,10 +49,20 @@ public class Tab2Chat extends ParentFragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("updateddata", updateddata);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        if (savedInstanceState==null){
+
+        }else {
+            updateddata = savedInstanceState.getParcelableArrayList("updateddata");
+        }
 
     }
 

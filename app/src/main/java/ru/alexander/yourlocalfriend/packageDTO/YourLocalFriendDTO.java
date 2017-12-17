@@ -1,10 +1,15 @@
 package ru.alexander.yourlocalfriend.packageDTO;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by ekaterina on 12/09/2017.
  */
 
-public class YourLocalFriendDTO {
+public class YourLocalFriendDTO implements Parcelable {
     private String yourLocalFriendName;
     private String yourLocalFriendAge;
     private String yourLocalFriendHobbies;
@@ -52,5 +57,15 @@ public class YourLocalFriendDTO {
 
     public String getYourLocalFriendHobbies() {
         return yourLocalFriendHobbies;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">YourLocalFriend</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="hello_text">To find the close friend enter your details, please. Nice to meet you!</string>
+    <string name="tab3header"> Search for your local friend HERE -></string>
+    <string name="tab3header2"> OR  describe your friend -></string>
+    <string name="btnSrchYourParameters">Find like you!</string>
+    <string name="btnSrchEnteredParameters">Find by your WISH!</string>
+    <string name="btn_add_to_chat">Add to chat!</string>
+    <string name="localFriendsListTextView">They can be your local friends! --></string>
+    <string name="your_local_friend_name">Local_friend_name</string>
+    <string name="your_local_friend_age">Local_friend_age</string>
+    <string name="your_local_friend_interests">Local_friend_interests</string>
+    <string name="tab_item_your_details">YOUR DETAILS</string>
+    <string name="tab_item_chats">CHATS</string>
+    <string name="tab_item_find_friend">FIND LOCAL FRIEND</string>
+    <string name="label_hobby_eng">Hobbies : </string>
+    <string name="label_hobby_age">Age : </string>
+
+</resources>
