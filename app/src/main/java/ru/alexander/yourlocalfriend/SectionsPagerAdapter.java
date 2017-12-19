@@ -32,7 +32,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
     }
 
     public void refreshData(List<YourLocalFriendDTO> chatlist) {
-        tab2Chat.refreshData(data);
+        tab2Chat.refreshData(chatlist);//(data)
     }
 
 

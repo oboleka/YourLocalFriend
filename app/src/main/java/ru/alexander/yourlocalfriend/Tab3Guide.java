@@ -34,7 +34,7 @@ public class Tab3Guide extends  ParentFragment {
     private String title;
     private Context context;
     OnFriendSelectedListener mCallback;
-    public ArrayList<YourLocalFriendDTO> LocalFriendsList;
+    ArrayList<YourLocalFriendDTO> LocalFriendsList;
     RecyclerView LocalFriendRV;
 
     // Container Activity must implement this interface
@@ -85,13 +85,14 @@ public class Tab3Guide extends  ParentFragment {
         Button btnSrchEnteredParameters = (Button) rootView.findViewById(R.id.btnSrchEnteredParameters);
         Button btnSrchYourParameters = (Button) rootView.findViewById(R.id.btnSrchYourParameters);
 
-
+        /*
         if (savedInstanceState==null){
             LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
         }else{
             LocalFriendsList=savedInstanceState.getParcelableArrayList("localFriendsList");
             LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
         }
+        */
 
         btnSrchEnteredParameters.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,9 +171,9 @@ public class Tab3Guide extends  ParentFragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("localFriendsList", LocalFriendsList);
     }
-
+/*
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState==null){
             LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
@@ -181,7 +182,17 @@ public class Tab3Guide extends  ParentFragment {
             LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
         }
     }
-
+*/
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState==null){
+            LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
+        }else{
+            LocalFriendsList=savedInstanceState.getParcelableArrayList("localFriendsList");
+            LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+        }
+    }
     public static Tab3Guide getInstanceTab3(Context context){
         Bundle args=new Bundle();
         Tab3Guide tab3=new Tab3Guide();

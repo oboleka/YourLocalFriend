@@ -2,6 +2,7 @@ package ru.alexander.yourlocalfriend;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -90,4 +91,15 @@ public class Tab2Chat extends ParentFragment {
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //View rootView = inflater.inflate(R.layout.tab2_chat, container, false);
+
+        //RecyclerView AddressRV=(RecyclerView)rootView.findViewById(R.id.adressChatRecyclerView);
+        //AddressRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        //adapter=new AdressChatListAdapter(updateddata);
+        //AddressRV.setAdapter(adapter);
+        //return rootView;
+    }
 }
