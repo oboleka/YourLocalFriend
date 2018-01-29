@@ -31,12 +31,17 @@ import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
 
 public class Tab3Guide extends  ParentFragment {
     private static final int LAYOUT=R.layout.tab3_guide;
+    private static final String TAG_FRAGMENT3 ="Search";
     private String title;
     private Context context;
     OnFriendSelectedListener mCallback;
     ArrayList<YourLocalFriendDTO> LocalFriendsList;
     RecyclerView LocalFriendRV;
 
+
+    public static String getTagFragment() {
+        return TAG_FRAGMENT3;
+    }
     // Container Activity must implement this interface
     public interface OnFriendSelectedListener {
         public void onFriendSelected(YourLocalFriendDTO FriendObject);
@@ -85,20 +90,19 @@ public class Tab3Guide extends  ParentFragment {
         Button btnSrchEnteredParameters = (Button) rootView.findViewById(R.id.btnSrchEnteredParameters);
         Button btnSrchYourParameters = (Button) rootView.findViewById(R.id.btnSrchYourParameters);
 
-        /*
+
         if (savedInstanceState==null){
-            LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
+            //LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
         }else{
             LocalFriendsList=savedInstanceState.getParcelableArrayList("localFriendsList");
             LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
         }
-        */
+
 
         btnSrchEnteredParameters.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = getActivity();
-                //Toast.makeText(context, "I am searching by SELECTED parameters , please wait!", Toast.LENGTH_SHORT);
                 Toast toast=Toast.makeText(v.getContext(), "I am searching by ENTERED details , please wait!", Toast.LENGTH_SHORT);
                 TextView text;
                 View vieew = toast.getView();
@@ -135,7 +139,6 @@ public class Tab3Guide extends  ParentFragment {
                 generateListView();
                 LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
 
-
             }
         });
         return rootView;
@@ -149,19 +152,18 @@ public class Tab3Guide extends  ParentFragment {
             //gets the results as ArrayList<YourLocalFriend> guides object
             //Show the ListView
         ArrayList<YourLocalFriendDTO> LocalFriendsListFromDB=new ArrayList<YourLocalFriendDTO>();
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Harper Lee", "85", "writing, living, imagination"));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Jean Louise", "10", "playing, school, lessons, scary stories"));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Jem", "11", "playing, playing , playing, playing, playing, playing"));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Atticus Finch", "50", "law, law, law, law, law, law, law, law, law"));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Calpornia", "60", "Cooking, playing, Cooking,Cooking,Cooking,Cooking"));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Boo Radly", "50", "Scary"));
+        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Harper Lee", "85", "writing, living, imagination", 1));
+        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Jean Louise", "10", "playing, school, lessons, scary stories", 2));
+        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Jem", "11", "playing, playing , playing, playing, playing, playing", 3));
+        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Atticus Finch", "50", "law, law, law, law, law, law, law, law, law", 4));
+        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Calpornia", "60", "Cooking, playing, Cooking,Cooking,Cooking,Cooking", 5));
+        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Boo Radly", "50", "Scary", 6));
 
         this.LocalFriendsList=LocalFriendsListFromDB;
         //return LocalFriendsList;
     }
 
-        // Send the event to the host activity
-
+    // Send the event to the host activity
     public  void passToAnotherActivity(YourLocalFriendDTO FriendObject){
           mCallback.onFriendSelected(FriendObject);
     }
@@ -201,8 +203,6 @@ public class Tab3Guide extends  ParentFragment {
         tab3.setTitle (context.getString(R.string.tab_item_find_friend));
 
         return tab3;
-        //updateddata=new ArrayList<YourLocalFriendDTO>();
-        //updateddata.add(new YourLocalFriendDTO("INIT", "15", "plat" ));
     }
 }
 

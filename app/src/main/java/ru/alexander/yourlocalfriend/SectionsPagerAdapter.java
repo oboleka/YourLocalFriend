@@ -35,15 +35,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
         tab2Chat.refreshData(chatlist);//(data)
     }
 
-
     public SectionsPagerAdapter(Context context, FragmentManager fm, ArrayList<YourLocalFriendDTO> list) {
         super(fm);
         this.context=context;
         //this.data=setData(list);
         this.data=list;
         initMap(context);
-
-
     }
 
     @Override
@@ -101,10 +98,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
 
 
     public void switchToFragment(Fragment newFrag) {
-
+     //   FragmentTransaction transaction = this.fm.beginTransaction();
         FragmentTransaction transaction = this.fm.beginTransaction();
         transaction.replace(id.container, newFrag);
-        transaction.addToBackStack(null);
+        transaction.addToBackStack(String.valueOf(newFrag.getTargetFragment()));//addToBackStack("Fragment Tag")
         transaction.commit();
     }
 
@@ -119,16 +116,21 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter{
               }
               return  obj;
       }
+    */
 
     public Fragment getFragment(int position){
-        Integer tag=mFragmentTags.get(position);
+        /*
+        Integer tag=tabs.get(position);
+
         if (tag==null){
             return null;
 
         }
         return fm.findFragmentById(tag);
+        */
+        return tabs.get(position);
     }
-*/
+
         private void initMap(Context context) {
             tabs = new HashMap<>();
             tabs.put(0, Tab1Info.getInstanceTab1Info(context));

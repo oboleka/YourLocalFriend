@@ -2,6 +2,7 @@ package ru.alexander.yourlocalfriend;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +40,26 @@ import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity  implements Tab3Guide.OnFriendSelectedListener{
 
+    private FirebaseAuth mAuth;
+    private Toolbar mToolBar;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     ArrayList<YourLocalFriendDTO> chatlist;
+    Fragment hostFragment;
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        FirebaseUser currentUser=mAuth.getCurrentUser();
+        if (currentUser==null){
+            sendToStart();
+        }
+    }
+    public void sendToStart(){
+        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+        startActivity(startIntent);
+        finish();
+    }
 
     public void initchatlist(){
         chatlist=new ArrayList<YourLocalFriendDTO>();
@@ -56,56 +77,25 @@ public class MainActivity extends AppCompatActivity  implements Tab3Guide.OnFrie
 
         super.onCreate(savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
+
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolBar = (Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle("Your Local Friend");
 
         if (savedInstanceState!=null){
             chatlist = savedInstanceState.getParcelableArrayList("chatlist");
         }else{
             this.initchatlist();
         }
-        mViewPager = (ViewPager) findViewById(R.id.container);
+
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), chatlist);
+        mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mSectionsPagerAdapter.setData(chatlist);
-/*
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Fragment fragment=((SectionsPagerAdapter) mViewPager.getAdapter()).getFragment(position);
-                if ((position==1)&&(fragment!=null))
-                {
-                    //fragment.onResume();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-*/
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG);
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         /** For the first app run asks to enter the  user info
          * if OK pressed leads to tab1
@@ -136,28 +126,64 @@ public class MainActivity extends AppCompatActivity  implements Tab3Guide.OnFrie
             getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
                     .putBoolean("isfirstrun", false).commit();
         }
+
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG);
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        super.onOptionsItemSelected(item);
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.main_logout_btn) {
+            FirebaseAuth.getInstance().signOut();
+            sendToStart();
+        }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -199,6 +225,14 @@ public class MainActivity extends AppCompatActivity  implements Tab3Guide.OnFrie
             }
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Bundle outState = new Bundle();
+        outState.putParcelableArrayList("chatlist", chatlist);
+        onSaveInstanceState(outState);
+        super.onBackPressed(); //Check if you still want to go back
     }
 
 

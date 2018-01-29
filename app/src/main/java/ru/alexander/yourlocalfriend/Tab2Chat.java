@@ -18,12 +18,17 @@ import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
 
 public class Tab2Chat extends ParentFragment {
     private static final int LAYOUT=R.layout.tab2_chat;
+    private final static String TAG_FRAGMENT2 = "ChatsFragment";
     private String title;
     private Context context;
-    ArrayList<YourLocalFriendDTO> updateddata;
+    static ArrayList<YourLocalFriendDTO> updateddata;
     RecyclerView AddressRV;
-    AdressChatListAdapter adapter;
+    private static AdressChatListAdapter  adapter;
 
+
+    public static String getTagFragment() {
+        return TAG_FRAGMENT2;
+    }
 
     public void setUpdateddata(ArrayList<YourLocalFriendDTO> data) {
         updateddata=new ArrayList<YourLocalFriendDTO>();
@@ -46,6 +51,7 @@ public class Tab2Chat extends ParentFragment {
         tab2.setUpdateddata(data);
         tab2.setContext(context);
         tab2.setTitle(context.getString(R.string.tab_item_chats));
+        adapter=new AdressChatListAdapter(updateddata);
         return tab2;
 
     }
@@ -60,13 +66,11 @@ public class Tab2Chat extends ParentFragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         if (savedInstanceState==null){
-
-        }else {
+       }else {
             updateddata = savedInstanceState.getParcelableArrayList("updateddata");
         }
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,11 +79,10 @@ public class Tab2Chat extends ParentFragment {
 
         RecyclerView AddressRV=(RecyclerView)rootView.findViewById(R.id.adressChatRecyclerView);
         AddressRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter=new AdressChatListAdapter(updateddata);
+        //adapter=new AdressChatListAdapter(updateddata);
         AddressRV.setAdapter(adapter);
         return rootView;
     }
-
 
     @Override
     public  void onResume(){
@@ -87,19 +90,16 @@ public class Tab2Chat extends ParentFragment {
 
     }
     public void refreshData(List<YourLocalFriendDTO> list){
-        adapter.setData(list);
-        adapter.notifyDataSetChanged();
+        //if (adapter!=null){
+            adapter.setData(list);
+            adapter.notifyDataSetChanged();
+        //}
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //View rootView = inflater.inflate(R.layout.tab2_chat, container, false);
-
-        //RecyclerView AddressRV=(RecyclerView)rootView.findViewById(R.id.adressChatRecyclerView);
-        //AddressRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        //adapter=new AdressChatListAdapter(updateddata);
-        //AddressRV.setAdapter(adapter);
-        //return rootView;
     }
+
+
 }

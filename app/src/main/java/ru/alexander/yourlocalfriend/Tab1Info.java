@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 
 public class Tab1Info extends ParentFragment {
     private static final int LAYOUT=R.layout.tab1_info;
+    private static final String TAG_FRAGMENT1 ="UserInfo" ;
 
 
     private Context context;
@@ -17,7 +18,9 @@ public class Tab1Info extends ParentFragment {
         this.context = context;
     }
 
-
+    public static String getTagFragment() {
+        return TAG_FRAGMENT1;
+    }
 
 
     public static Tab1Info getInstanceTab1Info(Context context){

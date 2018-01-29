@@ -17,5 +17,15 @@
     <string name="tab_item_find_friend">FIND LOCAL FRIEND</string>
     <string name="label_hobby_eng">Hobbies : </string>
     <string name="label_hobby_age">Age : </string>
+    <string name="create_acount_btn_txt">CREATE ACCOUNT</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_display_name">Display Name</string>
+    <string name="main_menu_log_out">Log out</string>
+    <string name="register_txt_create_new_account">CREATE a NEW ACCOUNT</string>
+    <string name="login_page_txt">Login to your account</string>
+    <string name="login_btn_txt">LOGIN</string>
+    <string name="need_new_account">NEED NEW ACCOUNT?</string>
+    <string name="start_login_btn">LOGIN</string>CREATE ACCOUNT
 
 </resources>
