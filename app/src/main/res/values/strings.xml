@@ -26,6 +26,9 @@
     <string name="login_page_txt">Login to your account</string>
     <string name="login_btn_txt">LOGIN</string>
     <string name="need_new_account">NEED NEW ACCOUNT?</string>
-    <string name="start_login_btn">LOGIN</string>CREATE ACCOUNT
+    <string name="start_login_btn">LOGIN</string>
+    <string name="your_age">Your age</string>
+    <string name="what_is_your_hobbies">What is your hobbies?</string>
+    <string name="save_your_info_btn">SAVE</string>CREATE ACCOUNT
 
 </resources>

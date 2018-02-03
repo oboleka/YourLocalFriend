@@ -8,10 +8,65 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.alexander.yourlocalfriend.MainActivity">
 
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
+
+    <Button
+        android:id="@+id/save_your_data"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tab1_info"/>
+        android:layout_marginTop="17dp"
+        android:text="@string/save_your_info_btn" />
+    <android.support.design.widget.TextInputLayout
+
+        android:id="@+id/your_age_txt"
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/your_age_input_edit_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="@string/your_age" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+
+        android:id="@+id/your_hobbies_txt"
+        android:layout_marginTop="110dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/your_hobbies"
+            android:layout_marginTop="110dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="@string/what_is_your_hobbies" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+
+        android:id="@+id/your_sex_txt"
+        android:layout_marginTop="160dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/your_sex"
+            android:layout_marginTop="160dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Man or woman?" />
+    </android.support.design.widget.TextInputLayout>
+
+
 
 </RelativeLayout>
