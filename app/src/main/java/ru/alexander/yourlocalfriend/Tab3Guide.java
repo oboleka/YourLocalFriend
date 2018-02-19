@@ -6,9 +6,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +24,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -37,7 +46,9 @@ public class Tab3Guide extends  ParentFragment {
     OnFriendSelectedListener mCallback;
     ArrayList<YourLocalFriendDTO> LocalFriendsList;
     RecyclerView LocalFriendRV;
-
+    private DatabaseReference  mLocalFriendDb;
+    Query queryDefaultAll;
+    FirebaseRecyclerAdapter<YourLocalFriendDTO, LocalFriendHolderFB> firebaseRecyclerAdapter;
 
     public static String getTagFragment() {
         return TAG_FRAGMENT3;
@@ -46,7 +57,6 @@ public class Tab3Guide extends  ParentFragment {
     public interface OnFriendSelectedListener {
         public void onFriendSelected(YourLocalFriendDTO FriendObject);
     }
-
 
     public void setContext(Context context) {
         this.context = context;
@@ -58,7 +68,6 @@ public class Tab3Guide extends  ParentFragment {
 
         Activity activity = getActivity();
 
-
             // This makes sure that the container activity has implemented
             // the callback interface. If not, it throws an exception
             try {
@@ -67,8 +76,6 @@ public class Tab3Guide extends  ParentFragment {
                 throw new ClassCastException(activity.toString()
                         + " must implement OnHeadlineSelectedListener");
             }
-
-
     }
 
     @Override
@@ -83,9 +90,57 @@ public class Tab3Guide extends  ParentFragment {
         EditText editTextHobby = (EditText) rootView.findViewById(R.id.editTextHobby);
 
 
-        LocalFriendRV=(RecyclerView)rootView.findViewById(R.id.local_friend_RecyclerView);
-        LocalFriendRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        //Firebase UI , recycler view adapter-------------------------------------------------------
+        queryDefaultAll = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("LocalFriends");
 
+        FirebaseRecyclerOptions<YourLocalFriendDTO> options =
+                new FirebaseRecyclerOptions.Builder<YourLocalFriendDTO>()
+                        .setQuery(queryDefaultAll, YourLocalFriendDTO.class)
+                        .build();
+
+        firebaseRecyclerAdapter =
+                new FirebaseRecyclerAdapter<YourLocalFriendDTO, LocalFriendHolderFB>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull LocalFriendHolderFB holder, int position, @NonNull YourLocalFriendDTO model) {
+                        holder.setName(model.getYourLocalFriendName());
+                        holder.setAge(model.getYourLocalFriendAge());
+                        holder.setHobbies(model.getYourLocalFriendHobbies());
+                        holder.setButton();
+
+                    }
+
+                    @Override
+                    public LocalFriendHolderFB onCreateViewHolder(ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.your_local_friend_item, parent, false);
+
+                        return new LocalFriendHolderFB(view);
+                    }
+
+                    @Override
+                    public void onError(DatabaseError e) {
+                        Context context = getActivity();
+                        Toast toast=Toast.makeText(getContext(), "Error while getting data about the Local Friends", Toast.LENGTH_SHORT);
+                        TextView text;
+                        View vieew = toast.getView();
+                        text = (TextView) vieew.findViewById(android.R.id.message);
+                        text.setTextColor(getResources().getColor(R.color.toastTexColor));
+                        //text.setShadowLayer(0,0,0,0);
+                        text.setBackgroundColor(getResources().getColor(R.color.toastBackground));
+                        vieew.setBackgroundResource(R.drawable.toast);
+                        toast.setView(vieew);
+                        toast.show();
+                    }
+                };
+        //Firebase UI , recycler view adapter-------------------------------------------------------
+
+
+        LocalFriendRV = (RecyclerView) rootView.findViewById(R.id.local_friend_RecyclerView);
+        LocalFriendRV.setHasFixedSize(true);
+        LocalFriendRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        //show all local friend from database
+        LocalFriendRV.setAdapter(firebaseRecyclerAdapter);
 
         Button btnSrchEnteredParameters = (Button) rootView.findViewById(R.id.btnSrchEnteredParameters);
         Button btnSrchYourParameters = (Button) rootView.findViewById(R.id.btnSrchYourParameters);
@@ -95,9 +150,9 @@ public class Tab3Guide extends  ParentFragment {
             //LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
         }else{
             LocalFriendsList=savedInstanceState.getParcelableArrayList("localFriendsList");
-            LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+            //LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+            LocalFriendRV.setAdapter(firebaseRecyclerAdapter);
         }
-
 
         btnSrchEnteredParameters.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,8 +169,10 @@ public class Tab3Guide extends  ParentFragment {
                 toast.setView(vieew);
                 toast.show();
 
-                generateListView();
-                LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+                //generateListView();
+                //LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+                //TODO create query to search by entered values
+                LocalFriendRV.setAdapter(firebaseRecyclerAdapter);
 
             }
         });
@@ -136,14 +193,17 @@ public class Tab3Guide extends  ParentFragment {
                 toast.setView(vieew);
                 toast.show();
 
-                generateListView();
-                LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+                //generateListView();
+                //LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+                //TODO create query to search by user parameters
+                LocalFriendRV.setAdapter(firebaseRecyclerAdapter);
 
             }
         });
         return rootView;
     }
 
+    /*----------------------------------------------------------------------------------------------
     //to implement  inicialization with the results from server
     //private List<YourLocalFriendDTO> generateListView() {
     private void generateListView() {
@@ -162,7 +222,9 @@ public class Tab3Guide extends  ParentFragment {
         this.LocalFriendsList=LocalFriendsListFromDB;
         //return LocalFriendsList;
     }
-
+    /*----------------------------------------------------------------------------------------------
+    /*
+     */
     // Send the event to the host activity
     public  void passToAnotherActivity(YourLocalFriendDTO FriendObject){
           mCallback.onFriendSelected(FriendObject);
@@ -173,26 +235,17 @@ public class Tab3Guide extends  ParentFragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("localFriendsList", LocalFriendsList);
     }
-/*
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState==null){
-            LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
-        }else{
-            LocalFriendsList=savedInstanceState.getParcelableArrayList("localFriendsList");
-            LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
-        }
-    }
-*/
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState==null){
             LocalFriendsList=new ArrayList<YourLocalFriendDTO>();
+            LocalFriendRV.setAdapter(firebaseRecyclerAdapter);
         }else{
             LocalFriendsList=savedInstanceState.getParcelableArrayList("localFriendsList");
-            LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+            //LocalFriendRV.setAdapter(new LocalFriendsListAdapter(LocalFriendsList,getActivity(),Tab3Guide.this));
+            LocalFriendRV.setAdapter(firebaseRecyclerAdapter);
         }
     }
     public static Tab3Guide getInstanceTab3(Context context){
@@ -204,6 +257,62 @@ public class Tab3Guide extends  ParentFragment {
 
         return tab3;
     }
+
+
+    //Firebase UI , recycler view adapter-----------------------------------------------------------
+    public static class LocalFriendHolderFB extends RecyclerView.ViewHolder {
+        View mView;
+        TextView name;
+        TextView age;
+        TextView hobby;
+        Button button;
+
+        public LocalFriendHolderFB(View itemView) {
+            super(itemView);
+            mView = itemView;
+        }
+
+         public void setName(String nameFromDTO){
+                name = (TextView) mView.findViewById(R.id.local_friend__name_in_card_view);
+                name.setText(nameFromDTO);
+         }
+
+         public void setAge(String AgeFromDTO){
+            age = (TextView) mView.findViewById(R.id.local_friend_age);
+            age.setText(AgeFromDTO);
+         }
+
+        public void setHobbies(String HobbiesFromDTO){
+            hobby = (TextView) mView.findViewById(R.id.local_friends_hobby);
+            hobby.setText(HobbiesFromDTO);
+        }
+
+        public void setButton(){
+            button=(Button) itemView.findViewById(R.id.btn_add_to_chat);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO to add to chat
+                    //passToAnotherActivity(model);
+                }
+            });
+        }
+
+
+    }
+    //Firebase UI , recycler view adapter-----------------------------------------------------------
+
+    @Override
+    public void onStart(){
+        super.onStart();
+            firebaseRecyclerAdapter.startListening();
+        }
+    @Override
+    public void onStop() {
+        super.onStop();
+        firebaseRecyclerAdapter.stopListening();
+    }
+
 }
 
 
