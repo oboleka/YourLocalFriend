@@ -3,6 +3,7 @@ package ru.alexander.yourlocalfriend;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import android.os.Parcelable;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,14 +29,20 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
 
@@ -107,6 +115,7 @@ public class Tab3Guide extends  ParentFragment {
                         holder.setName(model.getYourLocalFriendName());
                         holder.setAge(model.getYourLocalFriendAge());
                         holder.setHobbies(model.getYourLocalFriendHobbies());
+                        holder.setmChatUser(model.getFriendId());
                         holder.setButton();
 
                     }
@@ -267,6 +276,16 @@ public class Tab3Guide extends  ParentFragment {
         TextView hobby;
         Button button;
 
+        private DatabaseReference mRootRef;
+        private FirebaseAuth mAuth;
+        private String mCurrentUserId;
+        private String mChatUser;
+
+        public void setmChatUser()
+        {
+
+        }
+
         public LocalFriendHolderFB(View itemView) {
             super(itemView);
             mView = itemView;
@@ -287,20 +306,92 @@ public class Tab3Guide extends  ParentFragment {
             hobby.setText(HobbiesFromDTO);
         }
 
+        public void setmChatUser(String IDFromDTO )
+        {
+            mChatUser = IDFromDTO;
+        }
+
+
         public void setButton(){
-            button=(Button) itemView.findViewById(R.id.btn_add_to_chat);
+            button = (Button) itemView.findViewById(R.id.btn_add_to_chat);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //TODO to add to chat
+                    addToChat();
                     //passToAnotherActivity(model);
                 }
             });
         }
 
 
+        private void addToChat() {
+
+            mRootRef = FirebaseDatabase.getInstance().getReference();
+            mAuth = FirebaseAuth.getInstance();
+            mCurrentUserId = mAuth.getCurrentUser().getUid();
+            final DatabaseReference mRootRefFriendChat = mRootRef.child("LocalFriendChat").child(mChatUser);
+
+            mRootRef.child("Chat").child(mCurrentUserId).addListenerForSingleValueEvent( new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChild(mChatUser)) {
+
+                        Toast toast = Toast.makeText(mView.getContext(), "Your LocalFriend is already in chat.", Toast.LENGTH_SHORT);
+                        TextView text;
+                        View vieew = toast.getView();
+                        text = (TextView) vieew.findViewById(android.R.id.message);
+                        text.setTextColor(mView.getResources().getColor(R.color.toastTexColor));
+                        //text.setShadowLayer(0,0,0,0);
+                        text.setBackgroundColor(mView.getResources().getColor(R.color.toastBackground));
+                        vieew.setBackgroundResource(R.drawable.toast);
+                        toast.setView(vieew);
+                        toast.show();
+
+                    } else {
+                        Map chatAddMap = new HashMap();
+                        chatAddMap.put("seen", false);
+                        chatAddMap.put("timestamp", new Date());
+
+                        Map chatUserMap = new HashMap();
+                        chatUserMap.put("Chat/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
+
+                        Map chatFriendMap = new HashMap();
+                        chatFriendMap.put("LocalFriendChat/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
+
+                        mRootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                                if (databaseError != null) {
+                                    Log.d("CHAT_LOG", databaseError.getMessage().toString());
+                                }
+                            }
+                        });
+
+                        mRootRef.updateChildren(chatFriendMap, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                                if (databaseError != null) {
+                                    Log.d("LOCAL_FRIEND_CHAT_LOG", databaseError.getMessage().toString());
+                                }
+                            }
+                        });
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
     }
     //Firebase UI , recycler view adapter-----------------------------------------------------------
+
 
     @Override
     public void onStart(){
