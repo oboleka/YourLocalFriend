@@ -25,6 +25,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +123,9 @@ public class Tab2Chat extends ParentFragment {
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Chat, Tab2Chat.ChatsHolderFB>(options) {
             @Override
             protected void onBindViewHolder(@NonNull Tab2Chat.ChatsHolderFB holder, int position, @NonNull Chat model) {
-                holder.setName(model.getTimestamp().toString());
+
+                //holder.setName(model.getTimestap().toString());
+                holder.setName(this.getRef(position).getKey());
             }
 
             @Override
@@ -186,7 +189,19 @@ public class Tab2Chat extends ParentFragment {
         }
 
         public void setName(String id) {
-            this.name.setText(id);
+            mRootRef.child("LocalFriends").child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String localFriendName = dataSnapshot.child("yourLocalFriendName").getValue().toString();
+                    name.setText(localFriendName);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
         }
     }
 
