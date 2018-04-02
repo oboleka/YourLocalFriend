@@ -1,6 +1,7 @@
 package ru.alexander.yourlocalfriend;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -122,10 +123,22 @@ public class Tab2Chat extends ParentFragment {
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Chat, Tab2Chat.ChatsHolderFB>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull Tab2Chat.ChatsHolderFB holder, int position, @NonNull Chat model) {
+            protected void onBindViewHolder(@NonNull Tab2Chat.ChatsHolderFB holder, final int position, @NonNull Chat model) {
 
-                //holder.setName(model.getTimestap().toString());
-                holder.setName(this.getRef(position).getKey());
+                final String localFriendId = this.getRef(position).getKey();
+                holder.setName(localFriendId);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String mChatLocalFriendName;
+                        Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                        chatIntent.putExtra("LocalFriendId", localFriendId);
+
+                        startActivity(chatIntent);
+                    }
+                });
+
             }
 
             @Override

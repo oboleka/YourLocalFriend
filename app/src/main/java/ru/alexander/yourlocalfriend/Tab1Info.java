@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
@@ -19,10 +20,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Tab1Info extends ParentFragment {
     private static final int LAYOUT=R.layout.tab1_info;
@@ -98,39 +101,30 @@ public class Tab1Info extends ParentFragment {
     }
 
     private void save_user_info(String mYourAgeValue, String mYourHobbiesValue, String mYourSexValue) {
-        mSaveProgressBar.setTitle("Saving your infor");
+        mSaveProgressBar.setTitle("Saving your info.");
         mSaveProgressBar.setMessage("Please wait while saving is completed");
         mSaveProgressBar.setCanceledOnTouchOutside(false);
         mSaveProgressBar.show();
         FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = current_user.getUid();
+
         mDataBase = FirebaseDatabase.getInstance().getReference().child("User").child(uid);
-        HashMap<String, String> userMap = new HashMap<>();
+        HashMap<String, Object> userMap = new HashMap<>();
         userMap.put("age", mYourAgeValue);
         userMap.put("hobbies", mYourHobbiesValue);
         userMap.put("sex", mYourSexValue);
-        mDataBase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        mDataBase.updateChildren(userMap,  new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    mSaveProgressBar.dismiss();
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                mSaveProgressBar.dismiss();
 
-                }
-                else{
-                    Toast toast=Toast.makeText(getContext(), "Your info was not saved, please check internet connection ", Toast.LENGTH_SHORT);
-                    TextView text;
-                    View vieew = toast.getView();
-                    text = (TextView) vieew.findViewById(android.R.id.message);
-                    text.setTextColor(getResources().getColor(R.color.toastTexColor));
-                    //text.setShadowLayer(0,0,0,0);
-                    text.setBackgroundColor(getResources().getColor(R.color.toastBackground));
-                    vieew.setBackgroundResource(R.drawable.toast);
-                    toast.setView(vieew);
-                    toast.show();
-
+                if (databaseError != null) {
+                    Log.d("CHAT_LOG", databaseError.getMessage().toString());
                 }
             }
         });
+
     }
 
 

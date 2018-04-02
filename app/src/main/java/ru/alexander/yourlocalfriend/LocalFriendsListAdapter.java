@@ -2,10 +2,7 @@ package ru.alexander.yourlocalfriend;
 
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,13 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.List;
 
 import ru.alexander.yourlocalfriend.packageDTO.YourLocalFriendDTO;
-
-import static java.security.AccessController.getContext;
 
 public class LocalFriendsListAdapter extends RecyclerView.Adapter<LocalFriendsListAdapter.LocalFriendHolder> {
 
@@ -55,28 +48,19 @@ public class LocalFriendsListAdapter extends RecyclerView.Adapter<LocalFriendsLi
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*
-                Toast toast=Toast.makeText(v.getContext(), LocalFriendsList.get(position).getYourLocalFriendName()+" is added to chat from position: " +position, Toast.LENGTH_SHORT);
-                TextView text;
-                View vieew = toast.getView();
-                text = (TextView) vieew.findViewById(android.R.id.message);
-                vieew.setBackgroundResource(R.drawable.toast);
-                toast.setView(vieew);
-                toast.show();
-                */
-                 YourLocalFriendDTO FriendToChat =LocalFriendsList.get(position) ;
+                  YourLocalFriendDTO FriendToChat =LocalFriendsList.get(position) ;
                 ((Tab3Guide) fragment).passToAnotherActivity(FriendToChat);
             }
         });
 
     }
 
-
     @Override
     public int getItemCount() {
         return LocalFriendsList.size();
     }
-    //Holder--------------------------------
+
+    //Working Holder--------------------------------
     public static class LocalFriendHolder extends RecyclerView.ViewHolder {
          CardView cardView;
          TextView name;
@@ -96,5 +80,6 @@ public class LocalFriendsListAdapter extends RecyclerView.Adapter<LocalFriendsLi
 
          }
      }
+    //Working Holder--------------------------------
 
 }

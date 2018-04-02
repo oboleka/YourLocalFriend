@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
@@ -212,28 +213,6 @@ public class Tab3Guide extends  ParentFragment {
         return rootView;
     }
 
-    /*----------------------------------------------------------------------------------------------
-    //to implement  inicialization with the results from server
-    //private List<YourLocalFriendDTO> generateListView() {
-    private void generateListView() {
-            //create a query based on entered parameters
-            //sends to server
-            //gets the results as ArrayList<YourLocalFriend> guides object
-            //Show the ListView
-        ArrayList<YourLocalFriendDTO> LocalFriendsListFromDB=new ArrayList<YourLocalFriendDTO>();
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Harper Lee", "85", "writing, living, imagination", 1));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Jean Louise", "10", "playing, school, lessons, scary stories", 2));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Jem", "11", "playing, playing , playing, playing, playing, playing", 3));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Atticus Finch", "50", "law, law, law, law, law, law, law, law, law", 4));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Calpornia", "60", "Cooking, playing, Cooking,Cooking,Cooking,Cooking", 5));
-        LocalFriendsListFromDB.add(new YourLocalFriendDTO("Boo Radly", "50", "Scary", 6));
-
-        this.LocalFriendsList=LocalFriendsListFromDB;
-        //return LocalFriendsList;
-    }
-    /*----------------------------------------------------------------------------------------------
-    /*
-     */
     // Send the event to the host activity
     public  void passToAnotherActivity(YourLocalFriendDTO FriendObject){
           mCallback.onFriendSelected(FriendObject);
@@ -317,7 +296,6 @@ public class Tab3Guide extends  ParentFragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO to add to chat
                     addToChat();
                     //passToAnotherActivity(model);
                 }
@@ -332,6 +310,7 @@ public class Tab3Guide extends  ParentFragment {
             mCurrentUserId = mAuth.getCurrentUser().getUid();
             final DatabaseReference mRootRefFriendChat = mRootRef.child("LocalFriendChat").child(mChatUser);
 
+            //add chat to users chats
             mRootRef.child("Chat").child(mCurrentUserId).addListenerForSingleValueEvent( new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -351,13 +330,11 @@ public class Tab3Guide extends  ParentFragment {
                     } else {
                         Map chatAddMap = new HashMap();
                         chatAddMap.put("seen", false);
-                        chatAddMap.put("timestamp", new Date());
+                        chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
 
                         Map chatUserMap = new HashMap();
                         chatUserMap.put("Chat/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
 
-                        Map chatFriendMap = new HashMap();
-                        chatFriendMap.put("LocalFriendChat/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
 
                         mRootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
                             @Override
@@ -365,16 +342,6 @@ public class Tab3Guide extends  ParentFragment {
 
                                 if (databaseError != null) {
                                     Log.d("CHAT_LOG", databaseError.getMessage().toString());
-                                }
-                            }
-                        });
-
-                        mRootRef.updateChildren(chatFriendMap, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-
-                                if (databaseError != null) {
-                                    Log.d("LOCAL_FRIEND_CHAT_LOG", databaseError.getMessage().toString());
                                 }
                             }
                         });
@@ -388,7 +355,39 @@ public class Tab3Guide extends  ParentFragment {
                 }
             });
 
-        }
+            //--create chat to LocalFriend
+            mRootRef.child("LocalFriendChat").child(mChatUser).addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(mCurrentUserId)) {
+                } else {
+                    Map chatAddMap = new HashMap();
+                    chatAddMap.put("seen", false);
+                    chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
+
+                    Map chatFriendMap = new HashMap();
+                    chatFriendMap.put("LocalFriendChat/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
+
+                    mRootRef.updateChildren(chatFriendMap, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                            if (databaseError != null) {
+                                Log.d("CHAT_LOG", databaseError.getMessage().toString());
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
     }
     //Firebase UI , recycler view adapter-----------------------------------------------------------
 

@@ -29,6 +29,7 @@
     <string name="start_login_btn">LOGIN</string>
     <string name="your_age">Your age</string>
     <string name="what_is_your_hobbies">What is your hobbies?</string>
-    <string name="save_your_info_btn">SAVE</string>CREATE ACCOUNT
+    <string name="save_your_info_btn">SAVE</string>
+    <string name="chat_enter_message">Enter message ...</string>CREATE ACCOUNT
 
 </resources>

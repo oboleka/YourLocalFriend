@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity  implements Tab3Guide.OnFrie
 
     public void initchatlist(){
         chatlist=new ArrayList<YourLocalFriendDTO>();
-        chatlist.add(new YourLocalFriendDTO("NO ADDRESS CHAT", "date", "last", 0));
+        chatlist.add(new YourLocalFriendDTO("NO ADDRESS CHAT", "date", "last", "0"));
     }
 
     @Override
