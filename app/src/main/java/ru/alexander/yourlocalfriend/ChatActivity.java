@@ -155,18 +155,18 @@ public class ChatActivity extends AppCompatActivity {
                     .child(mCurrentUserId).child(mChatLocalFriendId).push();
             String pushId = userMessagePush.getKey();
 
-            Map userMessageMap = new HashMap<>();
-            userMessageMap.put("message", message);
-            userMessageMap.put("seen", false);
-            userMessageMap.put("type", "text");
-            userMessageMap.put("time", ServerValue.TIMESTAMP);
+            Map commonMessageMap = new HashMap<>();
+            commonMessageMap.put("message", message);
+            commonMessageMap.put("seen", false);
+            commonMessageMap.put("type", "text");
+            commonMessageMap.put("time", ServerValue.TIMESTAMP);
+            commonMessageMap.put("from", mCurrentUserId);      ;
 
             Map userMessageMapPush = new HashMap<>();
-            userMessageMapPush.put(currentUserRef + "/" + pushId, userMessageMap);
+            userMessageMapPush.put(currentUserRef + "/" + pushId, commonMessageMap);
 
 
             //create message for Friend
-
             DatabaseReference friendMessagePush = mRootRef.child("FriendMessages")
                     .child(mChatLocalFriendId).child(mCurrentUserId).push();
             String friendPushId = userMessagePush.getKey();
@@ -174,7 +174,7 @@ public class ChatActivity extends AppCompatActivity {
             String currentFriendRef = "FriendMessages/" + mChatLocalFriendId + "/" + mCurrentUserId;
 
             //Map friendMessageMapPush = new HashMap<>();
-            userMessageMapPush.put(currentFriendRef + "/" + friendPushId, userMessageMap);
+            userMessageMapPush.put(currentFriendRef + "/" + friendPushId, commonMessageMap);
 
             mRootRef.updateChildren(userMessageMapPush, new DatabaseReference.CompletionListener() {
                 @Override
