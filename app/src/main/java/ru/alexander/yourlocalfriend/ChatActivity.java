@@ -1,5 +1,6 @@
 package ru.alexander.yourlocalfriend;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,9 +45,16 @@ public class ChatActivity extends AppCompatActivity {
     private String mCurrentUserId;
     Query queryAllChats;
     private RecyclerView mMessagesList;
+    private SwipeRefreshLayout mRefreshLayout;
+
     private  final List<Message> messageList = new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
     private MessageAdapter mAdapter;
+    private  static final int TOTAL_ITEMS_TO_LOAD = 10;
+    private int mCurrentPage = 1;
+    //new Solution
+    private int itemPos = 0;
+    private String mLastKey = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,8 @@ public class ChatActivity extends AppCompatActivity {
         mAdapter = new MessageAdapter(messageList);
 
         mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
+        mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
+
         mLinearLayout = new LinearLayoutManager(this);
 
         mMessagesList.setHasFixedSize(true);
@@ -103,18 +113,86 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         loadMessages();
+
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+            mCurrentPage++;
+            itemPos = 0;
+            loadMoreMessages();
+            }
+        });
+    }
+
+    private void loadMoreMessages() {
+//        mRootRef = FirebaseDatabase.getInstance().getReference();
+//        mAuth = FirebaseAuth.getInstance();
+//        mCurrentUserId = mAuth.getCurrentUser().getUid();
+        DatabaseReference messageRef =  mRootRef.child("messages").child(mCurrentUserId).child(mChatLocalFriendId);
+        Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+        messageQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Message message = dataSnapshot.getValue(Message.class);
+
+                messageList.add(itemPos++, message);
+                if(itemPos == 1){
+                    mLastKey = dataSnapshot.getKey();
+
+                }
+                mAdapter.notifyDataSetChanged();
+                mRefreshLayout.setRefreshing(false);
+                mLinearLayout.scrollToPositionWithOffset(10, 0);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     private void loadMessages() {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
-        mRootRef.child("messages").child(mCurrentUserId).child(mChatLocalFriendId).addChildEventListener(new ChildEventListener() {
+
+        DatabaseReference messageRef =  mRootRef.child("messages").child(mCurrentUserId).child(mChatLocalFriendId);
+        Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
+
+        messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
+
+                itemPos++;
+
+                if(itemPos == 1){
+                    mLastKey = dataSnapshot.getKey();
+
+                }
+
                 messageList.add(message);
                 mAdapter.notifyDataSetChanged();
+                mMessagesList.scrollToPosition(messageList.size() - 1 );
+                mRefreshLayout.setRefreshing(false);
             }
 
             @Override
