@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +30,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ru.alexander.yourlocalfriend.packageDTO.Chat;
@@ -113,7 +117,7 @@ public class Tab2Chat extends ParentFragment {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
-        queryAllChats = FirebaseDatabase.getInstance().getReference().child("Chat").child(mCurrentUserId);
+        queryAllChats = FirebaseDatabase.getInstance().getReference().child("Chat").child(mCurrentUserId).orderByChild("time");
 
         //queryAllChats.addValueEventListener(new)
         FirebaseRecyclerOptions<Chat> options =
@@ -127,6 +131,9 @@ public class Tab2Chat extends ParentFragment {
 
                 final String localFriendId = this.getRef(position).getKey();
                 holder.setName(localFriendId);
+
+                //-------20180530
+                holder.setMessage(localFriendId);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -194,11 +201,15 @@ public class Tab2Chat extends ParentFragment {
     public class ChatsHolderFB extends RecyclerView.ViewHolder{
         CardView cardView;
         TextView name;
+        TextView message;
+        TextView timeText;
 
         public ChatsHolderFB(View itemView) {
             super(itemView);
             cardView = (CardView)itemView.findViewById(R.id.adress_chat_cardView);
             name = (TextView) itemView.findViewById(R.id.chat_friend_name_in_card_view);
+            timeText = (TextView) itemView.findViewById(R.id.chat_date);
+            message = (TextView) itemView.findViewById(R.id.chat_last_phrase);
         }
 
         public void setName(String id) {
@@ -216,12 +227,58 @@ public class Tab2Chat extends ParentFragment {
             });
 
         }
+        public void setMessage(String id) {
+            mRootRef = FirebaseDatabase.getInstance().getReference();
+            mAuth = FirebaseAuth.getInstance();
+            mCurrentUserId = mAuth.getCurrentUser().getUid();
+            DatabaseReference messageRef =  mRootRef.child("messages").child(mCurrentUserId).child(id);
+            Query lastMessageQuery = messageRef.limitToLast(1);
+
+            lastMessageQuery.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        String data = dataSnapshot.child("message").getValue().toString();
+                        if (data == null || data.length()==0 ) {data = " --> yet empty chat";};
+                        data = data.substring(0, data.indexOf('\n')) + "...";
+                        if (data.length() > 45) {data = data.substring(0,45) + "..." ; };
+                    message.setText(data);
+
+                    String time = dataSnapshot.child("time").getValue().toString();
+                    if (time == null || TextUtils.isEmpty(time) ) {time = "";}
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:MM:SS");
+                    timeText.setText(sdf.format(new Date(Long.valueOf(time))));
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
     }
 
     @Override
     public void onStart(){
         super.onStart();
         firebaseRecyclerAdapter.startListening();
+        //
     }
     @Override
     public void onStop() {
