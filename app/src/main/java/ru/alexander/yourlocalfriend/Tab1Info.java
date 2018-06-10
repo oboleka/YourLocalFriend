@@ -20,9 +20,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,8 @@ public class Tab1Info extends ParentFragment {
     Button mTab1SaveBtn;
     private ProgressDialog mSaveProgressBar;
     private DatabaseReference mDataBase;
-
+    FirebaseUser current_user;
+    String uid;
     private Context context;
 
     public void setContext(Context context) {
@@ -69,6 +72,13 @@ public class Tab1Info extends ParentFragment {
         mYourSex = (TextInputLayout) rootView.findViewById(R.id.your_sex_txt);
         mTab1SaveBtn = (Button)rootView.findViewById(R.id.save_your_data);
 
+        current_user = FirebaseAuth.getInstance().getCurrentUser();
+        uid = current_user.getUid();
+
+        //----------set user details if exits---------------------------
+        setValues();
+
+
         mTab1SaveBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -100,13 +110,62 @@ public class Tab1Info extends ParentFragment {
         return rootView;
     }
 
+    private void setValues() {
+        mDataBase = FirebaseDatabase.getInstance().getReference().child("User").child(uid);
+        mDataBase.child("age").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String age = dataSnapshot.getValue().toString();
+                    mYourAge.getEditText().setText(age);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDataBase.child("hobbies").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String age = dataSnapshot.getValue().toString();
+                    mYourHobbies.getEditText().setText(age);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDataBase.child("sex").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String age = dataSnapshot.getValue().toString();
+                    mYourSex.getEditText().setText(age);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void save_user_info(String mYourAgeValue, String mYourHobbiesValue, String mYourSexValue) {
         mSaveProgressBar.setTitle("Saving your info.");
         mSaveProgressBar.setMessage("Please wait while saving is completed");
         mSaveProgressBar.setCanceledOnTouchOutside(false);
         mSaveProgressBar.show();
-        FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = current_user.getUid();
+//        FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+//        String uid = current_user.getUid();
 
         mDataBase = FirebaseDatabase.getInstance().getReference().child("User").child(uid);
         HashMap<String, Object> userMap = new HashMap<>();
